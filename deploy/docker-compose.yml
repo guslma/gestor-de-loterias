@@ -5,8 +5,9 @@ services:
     container_name: gestor-de-loterias
     image: ghcr.io/guslma/gestor-de-loterias:latest
     ports:
-      - "3000:3000"
+      - "4783:4783"
     environment:
+      PORT: "4783"
       DATABASE_URL: postgresql://gestor:SENHA_FORTE_AQUI@postgres:5432/gestor
       APP_USERNAME: admin
       APP_PASSWORD: TROQUE_ESTA_SENHA
@@ -84,7 +85,7 @@ x-casaos:
   icon: "https://cdn.jsdelivr.net/gh/guslma/gestor-de-loterias@v1.0.0/frontend/public/icon-512x512.png"
   index: /
   is_uncontrolled: false
-  port_map: "3000"
+  port_map: "4783"
   scheme: http
   store_app_id: gestor-de-loterias
   title:

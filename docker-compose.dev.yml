@@ -5,7 +5,7 @@ services:
       context: backend
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "4783:4783"
     environment:
       DATABASE_URL: postgresql://gestor:${POSTGRES_PASSWORD:-gestor}@postgres:5432/gestor
       UPLOADS_DIR: /app/backend/uploads
@@ -33,7 +33,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      VITE_BACKEND_URL: http://backend:3000
+      VITE_BACKEND_URL: http://backend:4783
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules

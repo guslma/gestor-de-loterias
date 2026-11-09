@@ -61,8 +61,13 @@ Depois de editar as variáveis e rodar o comando acima, conclua a instalação
 pela interface ou terminal. O app estará disponível em:
 
 ```
-http://<ip-do-seu-zimaos>:3000
+http://<ip-do-seu-zimaos>:4783
 ```
+
+> Se a porta `4783` já estiver ocupada por outro app, troque só o primeiro
+> número em `ports:` (ex.: `"4800:4783"`) e o `port_map` no fim do
+> `docker-compose.yml`. O segundo `4783` é a porta interna do container e não
+> muda.
 
 > Se você instalou pela interface do ZimaOS, ele já abre sozinho quando
 > você clica no ícone do app.
@@ -105,11 +110,6 @@ docker compose up -d
 > entre no app pelo ZimaOS, vá em **Configurações do app** → variáveis de
 > ambiente, e adicione essas três. Senão o container não sobe depois da
 > atualização.
-
-> ⚠️ **Sessões serão resetadas:** Esta versão inclui um sistema de versão
-> de token (`SESSION_VERSION`). Ao atualizar, **todas as sessões existentes
-> expiram** — você e qualquer outro usuário precisarão fazer login novamente.
-> É de propósito (e acontece só uma vez).
 
 ---
 
@@ -162,14 +162,14 @@ Tudo fica em `/DATA/AppData/gestor-de-loterias/`:
 ## Acesso remoto (fora de casa)
 
 O app tem login com senha, mas **não tem HTTPS** próprio — sua senha viaja
-em texto puro pela internet se você expor a porta 3000 diretamente. **Nunca
-faça port-forward da 3000 no seu roteador.** Use uma das opções abaixo, que
+em texto puro pela internet se você expor a porta 4783 diretamente. **Nunca
+faça port-forward da 4783 no seu roteador.** Use uma das opções abaixo, que
 dão HTTPS de verdade sem abrir porta nenhuma:
 
 1. **VPN** (mais simples) — Instale [Tailscale](https://tailscale.com) no
-   ZimaOS e rode `tailscale serve 3000` — ele já dá HTTPS automático.
+   ZimaOS e rode `tailscale serve 4783` — ele já dá HTTPS automático.
 2. **Cloudflare Tunnel** — Instale o app `cloudflared` pelo App Store do
-   ZimaOS/CasaOS, configure o túnel apontando pra porta 3000 e associe um
+   ZimaOS/CasaOS, configure o túnel apontando pra porta 4783 e associe um
    domínio seu. Não precisa mexer em firewall/roteador.
 3. **Reverse proxy manual** — Use Nginx ou Caddy com Let's Encrypt na frente
    do app.
