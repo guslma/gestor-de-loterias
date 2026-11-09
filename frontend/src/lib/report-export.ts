@@ -27,7 +27,9 @@ function escapeHtml(text: string): string {
 }
 
 const STYLE = `
-  * { box-sizing: border-box; }
+  /* Sem print-color-adjust o navegador descarta as cores de fundo ao
+     imprimir/salvar em PDF, e as barras (feitas com background) somem. */
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #0f172a; font-size: 12px; }
   .page { padding: 40px 44px 32px; }
   header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 2px solid #0f172a; margin-bottom: 18px; }
