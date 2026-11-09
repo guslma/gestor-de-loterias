@@ -1,6 +1,8 @@
 import { LayoutDashboard, TrendingUp, TrendingDown, Clover, LogOut } from "lucide-react"
+import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 
+import { AboutDialog } from "@/components/layout/about-dialog"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 
@@ -13,21 +15,26 @@ const items = [
 export function AppHeader() {
   const { pathname } = useLocation()
   const { logout } = useAuth()
+  const [aboutOpen, setAboutOpen] = useState(false)
 
   // Marca, menu e Sair sempre nas mesmas três colunas: o menu não muda de lugar
   // de uma página para outra.
   return (
     <header className="sticky top-0 z-50 w-full header-glass">
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-4 md:grid-cols-[1fr_auto_1fr] md:px-5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-blue-500 to-green-500">
+        <button
+          type="button"
+          onClick={() => setAboutOpen(true)}
+          className="-ml-1.5 flex w-fit items-center gap-2.5 rounded-xl px-1.5 py-1 text-left transition-colors hover:bg-white/70"
+          aria-label="Sobre o Gestor de Loterias"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-blue-500 to-green-500">
             <Clover className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-[17px] font-bold text-blue-700">Gestor de Loterias</span>
-          <span className="text-xs text-slate-500" title="Versão do app">
-            v{__APP_VERSION__}
           </span>
-        </div>
+          <span className="text-[17px] font-bold text-blue-700">Gestor de Loterias</span>
+          <span className="text-xs text-slate-500">v{__APP_VERSION__}</span>
+        </button>
+        <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Menu">
           {items.map((item) => {
