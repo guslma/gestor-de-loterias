@@ -14,18 +14,26 @@ Monorepo com frontend e backend separados, comunicando via HTTP/JSON.
   são arquivos `.sql` simples em `database/migrations/`, aplicadas
   automaticamente no boot do backend (`backend/src/migrate.ts`), controladas
   por uma tabela `_migrations`.
-- **Sem autenticação**: app pensado para uso local/VPN (ver
-  `deploy/README.md` sobre acesso remoto seguro).
+- **Autenticação**: um único usuário, definido por `APP_USERNAME` e
+  `APP_PASSWORD`. A sessão é um JWT em cookie `httpOnly`, com limite de
+  tentativas no login e proteção CSRF por header (`backend/src/lib/auth.ts`).
+  Para acesso de fora de casa, ver `deploy/README.md`.
+- **Comprovantes**: as fotos são convertidas para WebP e criptografadas com
+  AES-256-GCM antes de ir para o disco (`backend/src/lib/receipt-storage.ts`),
+  e só são servidas pela API (`/api/receipts/files/:uuid`). A leitura dos
+  dados do comprovante (valor, data, beneficiário, categoria) é feita por um
+  modelo com visão no Ollama (`backend/src/lib/receipt-extraction.ts`).
 - **Import de planilhas**: parser de balanço anual em
   `backend/src/lib/import-balanco.ts`, exposto via `POST /api/import`
   (`?dryRun=true` para pré-visualizar antes de gravar).
 - **Deploy**:
   - `Dockerfile` + `docker-compose.yml` na raiz — 2 containers (app +
-    postgres). Por padrão usa a imagem publicada no GitHub
+    postgres). O app roda como o usuário `node`, sem root. Por padrão usa a imagem publicada no GitHub
     (`ghcr.io/guslma/gestor-de-loterias`); `docker compose up -d --build` builda
     localmente a partir do `Dockerfile` em vez de baixar.
   - `docker-compose.dev.yml` — ambiente de desenvolvimento com hot-reload
     (containers separados de frontend e backend, volumes montados).
   - `deploy/` — formato específico para instalação oficial no ZimaOS/CasaOS
-    (bind mounts em `/DATA/AppData/...`, metadados `x-casaos`). Ver
+    (bind mounts em `/DATA/AppData/...`, porta `4783`, metadados `x-casaos`
+    e o serviço `updater`, que atualiza o app a cada 6 horas). Ver
     `deploy/README.md`.

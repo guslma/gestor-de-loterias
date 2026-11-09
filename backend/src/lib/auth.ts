@@ -54,7 +54,7 @@ export function setSessionCookie(req: Request, res: Response, token: string) {
     // Marca o cookie como Secure só quando a conexão realmente é HTTPS
     // (direto ou via reverse proxy com X-Forwarded-Proto, com "trust proxy"
     // configurado no index.ts). Setar Secure sempre quebraria o login em
-    // deploys sem TLS, como o ZimaOS expondo a porta 3000 em HTTP puro —
+    // deploys sem TLS, como o ZimaOS expondo a porta 4783 em HTTP puro —
     // o navegador descarta cookies Secure recebidos por HTTP.
     secure: req.secure,
     maxAge: 7 * 24 * 60 * 60 * 1000,
