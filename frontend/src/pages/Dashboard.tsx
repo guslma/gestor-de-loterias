@@ -36,6 +36,7 @@ import {
   type Period,
 } from "@/lib/finance"
 import { buildReportHtml } from "@/lib/report-export"
+import { buildReportPdf } from "@/lib/report-pdf"
 import { ReportPreview } from "@/components/reports/report-preview"
 import { cn } from "@/lib/utils"
 
@@ -120,7 +121,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [storeName, setStoreName] = useState("Minha Lotérica")
   const [period, setPeriod] = useState<Period | null>(null)
-  const [report, setReport] = useState<{ html: string; title: string } | null>(null)
+  const [report, setReport] = useState<{ html: string; title: string; makePdf: () => Promise<File> } | null>(null)
 
   useEffect(() => {
     fetchTransactions()
@@ -241,7 +242,13 @@ export default function Dashboard() {
           </Link>
           <button
             type="button"
-            onClick={() => setReport({ html: buildReportHtml(transactions, period, storeName), title: periodLabel(period) })}
+            onClick={() =>
+              setReport({
+                html: buildReportHtml(transactions, period, storeName),
+                title: periodLabel(period),
+                makePdf: () => buildReportPdf(transactions, period, storeName),
+              })
+            }
             className="inline-flex h-10 items-center gap-2 rounded-[10px] bg-blue-700 px-3.5 font-semibold text-white hover:bg-blue-800"
           >
             <Printer className="h-4 w-4" /> Gerar PDF
@@ -472,7 +479,7 @@ export default function Dashboard() {
         </div>
       </Panel>
 
-      {report && <ReportPreview html={report.html} title={report.title} onClose={() => setReport(null)} />}
+      {report && <ReportPreview html={report.html} title={report.title} makePdf={report.makePdf} onClose={() => setReport(null)} />}
     </div>
   )
 }
