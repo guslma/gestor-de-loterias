@@ -35,7 +35,8 @@ import {
   wholeNumber,
   type Period,
 } from "@/lib/finance"
-import { printReport } from "@/lib/report-export"
+import { buildReportHtml } from "@/lib/report-export"
+import { ReportPreview } from "@/components/reports/report-preview"
 import { cn } from "@/lib/utils"
 
 const GOOD = "text-emerald-700"
@@ -119,6 +120,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [storeName, setStoreName] = useState("Minha Lotérica")
   const [period, setPeriod] = useState<Period | null>(null)
+  const [report, setReport] = useState<{ html: string; title: string } | null>(null)
 
   useEffect(() => {
     fetchTransactions()
@@ -239,11 +241,7 @@ export default function Dashboard() {
           </Link>
           <button
             type="button"
-            onClick={() => {
-              if (!printReport(transactions, period, storeName)) {
-                toast({ title: "Aviso", description: "Permita janelas pop-up para gerar o PDF", variant: "destructive" })
-              }
-            }}
+            onClick={() => setReport({ html: buildReportHtml(transactions, period, storeName), title: periodLabel(period) })}
             className="inline-flex h-10 items-center gap-2 rounded-[10px] bg-blue-700 px-3.5 font-semibold text-white hover:bg-blue-800"
           >
             <Printer className="h-4 w-4" /> Gerar PDF
@@ -473,6 +471,8 @@ export default function Dashboard() {
           </table>
         </div>
       </Panel>
+
+      {report && <ReportPreview html={report.html} title={report.title} onClose={() => setReport(null)} />}
     </div>
   )
 }

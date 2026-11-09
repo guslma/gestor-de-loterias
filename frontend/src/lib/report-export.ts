@@ -147,21 +147,17 @@ function yearReport(list: Transaction[], year: number) {
 }
 
 /** Abre o relatório do período numa janela pronta para imprimir ou salvar como PDF. */
-export function printReport(list: Transaction[], period: Period, storeName: string): boolean {
+// Monta o relatório como um documento HTML completo, mostrado e impresso pela
+// pré-visualização (components/reports/report-preview.tsx).
+export function buildReportHtml(list: Transaction[], period: Period, storeName: string): string {
   const now = new Date()
   const generated = `${now.toLocaleDateString("pt-BR")} às ${now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`
   const title = period.mode === "month" ? `${MONTHS[period.month]} de ${period.year}` : String(period.year)
-  const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório ${escapeHtml(title)}</title><style>${STYLE}</style></head>
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório ${escapeHtml(title)}</title><style>${STYLE}</style></head>
     <body><div class="page">
       <header><div><div class="kicker">${period.mode === "month" ? "Relatório mensal" : "Relatório anual"}</div><h1>${escapeHtml(title)}</h1></div>
       <div class="store">${escapeHtml(storeName)}<span>Gestor de Loterias</span></div></header>
       ${period.mode === "month" ? monthReport(list, period) : yearReport(list, period.year)}
       <footer><span>Gerado em ${generated}</span><span>${escapeHtml(periodLabel(period))}</span></footer>
     </div></body></html>`
-  const win = window.open("", "_blank")
-  if (!win) return false
-  win.document.write(html)
-  win.document.close()
-  win.onload = () => setTimeout(() => win.print(), 250)
-  return true
 }
