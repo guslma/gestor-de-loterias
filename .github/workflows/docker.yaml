@@ -47,6 +47,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/guslma/gestor-de-loterias
+          # Sem isto a action também marca como "latest" toda tag de versão
+          # (v1.2.3), e quem terminar de compilar por último vira o latest,
+          # mesmo que seja uma versão antiga. Só o main define o latest.
+          flavor: |
+            latest=false
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
